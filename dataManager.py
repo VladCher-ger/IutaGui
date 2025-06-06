@@ -9,12 +9,14 @@ class DataManager():
         pass
 
     def load_data(self, filename = None):
-
+        self.data = None
         if not filename:
            filename = askopenfilename(initialdir="./Data/")
 
-        
-
+        print(filename)
+        if not filename:
+            return
+ 
         self.data = pd.read_csv(filename, sep=",", skiprows=1)
 
         self.data.columns = self.data.columns.str.strip()
@@ -32,7 +34,6 @@ class DataManager():
 
         # Drop the original Date and Time columns
         self.data.drop(['Date', 'Time'], axis=1, inplace=True)
-        print(self.data.head())
 
        
 

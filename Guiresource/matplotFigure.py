@@ -42,6 +42,8 @@ class PlotCanvas(FigureCanvas):
         self.axes.legend()
         # Refresh canvas
         self.fig.tight_layout()
+        self.axes.grid(True)
         self.draw()
+
 
         self.pltCnt+=1

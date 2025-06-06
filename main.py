@@ -23,10 +23,12 @@ class MainApplication(gui.MainWindow):
     def loadNewData(self):
 
         self.datamanager.load_data()
-        
-        self.list.clear()
 
-        self.list.addItems(self.datamanager.data.head())
+        if not self.datamanager.data is None:
+        
+            self.list.clear()
+
+            self.list.addItems(self.datamanager.data.head())
 
     def clearPlot(self):
         self.plotListing = []
@@ -54,5 +56,5 @@ if __name__ == "__main__":
     app.setPalette(dark_palette)
     app.setApplicationDisplayName("Demo")
 
-    main.show()
+    main.showMaximized()
     app.exec()
