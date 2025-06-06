@@ -1,5 +1,4 @@
 
-import pyqtgraph as pg
 from PyQt6 import QtWidgets, QtCore, QtGui
 
 from PyQt6.QtCore import QEvent, QSize, Qt
