@@ -1,5 +1,5 @@
 from Guiresource import colorpalette 
-from PyQt6 import QtWidgets, QtCore, QtGui
+from PyQt6 import QtWidgets
 import gui
 from dataManager import DataManager
 
@@ -9,11 +9,13 @@ class MainApplication(gui.MainWindow):
     def __init__(self):
         super().__init__()
         self.init_gui()
-        self.datamanager = DataManager()
+        self.datamanager =  DataManager()
         
+
+
+
         self.init_actions()
         self.plotListing = []
-
     def init_actions(self):
 
         self.LoadData.pressed.connect(self.loadNewData)
@@ -27,7 +29,6 @@ class MainApplication(gui.MainWindow):
         if not self.datamanager.data is None:
         
             self.list.clear()
-
             self.list.addItems(self.datamanager.data.head())
 
     def clearPlot(self):

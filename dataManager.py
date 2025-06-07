@@ -17,7 +17,7 @@ class DataManager():
         if not filename:
             return
  
-        self.data = pd.read_csv(filename, sep=",", skiprows=1)
+        self.data : pd.DataFrame|None = pd.read_csv(filename, sep=",", skiprows=1)
 
         self.data.columns = self.data.columns.str.strip()
 
