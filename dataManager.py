@@ -35,7 +35,7 @@ class DataManager():
         # Drop the original Date and Time columns
         self.data.drop(['Date', 'Time'], axis=1, inplace=True)
 
-       
+        
 
 if __name__ == "__main__":
 

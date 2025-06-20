@@ -3,6 +3,7 @@ from PyQt6 import QtWidgets, QtCore, QtGui
 
 from PyQt6.QtCore import QEvent, QSize, Qt
 from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import QDateTime, QTime, QDate
 from PyQt6.QtWidgets import (
     QApplication,
     QFrame,
@@ -13,6 +14,13 @@ from PyQt6.QtWidgets import (
     QToolButton,
     QVBoxLayout,
     QWidget,
+    QDateTimeEdit,
+    QDialogButtonBox,
+    QDialog,
+    QCalendarWidget,
+    QTimeEdit,
+    QPushButton
+    
     
 )
 
@@ -61,6 +69,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.customize_graphs()
         self.define_buttons()
         self.define_list()
+
         #self.make_logo()
 
         MainLayout.setContentsMargins(11, 11, 11, 11)
@@ -79,6 +88,25 @@ class MainWindow(QtWidgets.QMainWindow):
         RightGraphlayout.addWidget(self.plotWidget)
 
         LeftLayout.addLayout(ButtonLayout1)
+
+        layout = QVBoxLayout()
+        
+        self.datetime_btn = QPushButton("Select Start time")
+        self.datetime_btn.clicked.connect(self.show_dialog)
+        
+        self.result_label = QLabel("No date/time selected")
+
+        self.datetime_btn_end = QPushButton("End Start time")
+        self.datetime_btn_end.clicked.connect(self.show_dialog_end)
+        
+        self.result_label_end = QLabel("No date/time selected")
+
+        layout.addWidget(self.datetime_btn)
+        layout.addWidget(self.result_label)
+        layout.addWidget(self.datetime_btn_end)
+        layout.addWidget(self.result_label_end)
+
+        LeftLayout.addLayout(layout)
 
         LeftLayout.addWidget(self.list)
         
@@ -113,7 +141,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.LoadData.setFont(QtGui.QFont("Times", 14))
         self.ResetPlot.setFont(QtGui.QFont("Times", 14))
 
+    def show_dialog(self):
+        self.dialog = DateTimeDialog(self)
+        if self.dialog.exec():
+            datetime = self.dialog.get_datetime()
+            self.datetime_start= datetime.toString('yyyy-MM-dd HH:mm:ss')
 
+            self.result_label.setText(
+                f"Start: {datetime.toString('yyyy-MM-dd HH:mm')}"
+            )
+    def show_dialog_end(self):
+        self.dialog_end = DateTimeDialog(self)
+        if self.dialog_end.exec():
+            datetime = self.dialog_end.get_datetime()
+            self.datetime_end = datetime.toString('yyyy-MM-dd HH:mm:ss')
+            self.result_label_end.setText(
+                f"End: {datetime.toString('yyyy-MM-dd HH:mm')}"
+            )
 
     def customize_graphs(self):
         
@@ -226,7 +270,49 @@ class CustomTitleBar(QWidget):
             self.normal_button.setVisible(False)
             self.max_button.setVisible(True)
         
+class DateTimeDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Select Date and Time")
+        self.initUI()
+        
+    def initUI(self):
+        layout = QVBoxLayout()
+        
+        # Calendar widget for date selection
+        self.calendar = QCalendarWidget()
 
+        
+        # Time edit with custom settings
+        time_layout = QHBoxLayout()
+        time_layout.addWidget(QLabel("Time:"))
+        
+        self.time_edit = QTimeEdit()
+        self.time_edit.setDisplayFormat("HH:mm:ss")
+        self.time_edit.setTime(QTime(12, 0))  # Default to noon
+        
+        
+        time_layout.addWidget(self.time_edit)
+        time_layout.addStretch()
+        
+        # Dialog buttons
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        
+        layout.addWidget(self.calendar)
+        layout.addLayout(time_layout)
+        layout.addWidget(buttons)
+        
+        self.setLayout(layout)
+    
+    def get_datetime(self):
+        return QDateTime(
+            self.calendar.selectedDate(),
+            self.time_edit.time()
+        )
 if __name__ == "__main__":
 
     
