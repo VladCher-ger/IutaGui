@@ -1,23 +1,33 @@
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import numpy as np
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+from PyQt6.QtWidgets import QWidget
 
-class PlotCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
-        self.fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = self.fig.add_subplot(111)
-        super(PlotCanvas, self).__init__(self.fig)
-        self.setParent(parent)
+class PlotCanvas(QWidget):
 
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        
+        # Create the figure and canvas
+        self.fig= Figure()
+        self.canvas = FigureCanvas(self.fig)
+        
+        # Create the navigation toolbar
+        self.toolbar = NavigationToolbar(self.canvas, self)
         self.pltCnt = 0
         self.twinxList= []
+
+        self.axes = self.fig.add_subplot(111)
         
     def clearPlot(self):
         for twin in self.twinxList:
             self.fig.delaxes(twin)
         self.axes.clear()
         self.twinxList = []
-        self.draw()
+
+
+        self.canvas.draw()
         self.pltCnt = 0
     
     def plot(self,Data, label):
@@ -43,7 +53,7 @@ class PlotCanvas(FigureCanvas):
         # Refresh canvas
         self.fig.tight_layout()
         self.axes.grid(True)
-        self.draw()
+        self.canvas.draw()
 
 
         self.pltCnt+=1
